@@ -7,8 +7,11 @@ PROJECT_NAME=syswebclient
 GENERATOR_BIN=.bin
 GENERATOR_JAR=$(GENERATOR_BIN)/openapi-generator-cli.jar
 GENERATOR_VERSION=7.14.0
+DOCS_MD=$(wildcard $(RUST_CLIENT_OUT)/docs/*.md)
+DOCS_HTML=$(patsubst %.md,%.html,$(DOCS_MD))
 
-.PHONY: generate clean ensure_codegen
+
+.PHONY: generate clean ensure_codegen docs
 
 generate: $(OPENAPI_JSON) ensure_codegen
 	jq '.info.license.identifier = "Apache-2.0"' $(OPENAPI_JSON) > $(OPENAPI_JSON).patched
@@ -20,6 +23,7 @@ generate: $(OPENAPI_JSON) ensure_codegen
 	  --skip-validate-spec \
 	  --additional-properties packageName=$(PROJECT_NAME)
 	cd $(RUST_CLIENT_OUT) && cargo clippy --fix --allow-dirty -- -Dwarnings
+	$(MAKE) docs
 
 $(OPENAPI_JSON):
 	curl -fsSL $(OPENAPI_URL) -o $(OPENAPI_JSON)
@@ -33,5 +37,11 @@ ensure_codegen:
 		curl -L "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/$(GENERATOR_VERSION)/openapi-generator-cli-$(GENERATOR_VERSION).jar" -o $(GENERATOR_JAR); \
 	fi
 
+docs:
+	python3 -m venv .venv && \
+	.venv/bin/pip install --upgrade pip && \
+	.venv/bin/pip install mkdocs mkdocs-material && \
+	.venv/bin/mkdocs build --site-dir ./html-docs
+
 clean:
-	rm -rf $(OPENAPI_JSON) $(RUST_CLIENT_OUT) $(GENERATOR_BIN) *json
+	rm -rf html-docs .venv .bin *json
