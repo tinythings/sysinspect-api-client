@@ -1,0 +1,100 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SysInspect API",
+    "description": "",
+    "license": {
+      "name": "",
+      "identifier": "Apache-2.0"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "post": {
+        "tags": [],
+        "operationId": "health_handler",
+        "responses": {
+          "200": {
+            "description": "Health status",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query": {
+      "post": {
+        "tags": [],
+        "operationId": "query_handler",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QueryRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "query",
+          "traits",
+          "mid",
+          "context"
+        ],
+        "properties": {
+          "context": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "type": "string"
+            }
+          },
+          "mid": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          },
+          "traits": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
