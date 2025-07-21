@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := generate
+
 OPENAPI_JSON=openapi.json
 OPENAPI_URL=http://localhost:4202/api-doc/openapi.json
 RUST_CLIENT_OUT=./sysinspect-client
