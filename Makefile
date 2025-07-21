@@ -17,6 +17,7 @@ generate: $(OPENAPI_JSON) ensure_codegen
 	  -o $(RUST_CLIENT_OUT) \
 	  --skip-validate-spec \
 	  --additional-properties packageName=$(PROJECT_NAME)
+	cd $(RUST_CLIENT_OUT) && cargo clippy --fix --allow-dirty -- -Dwarnings
 
 $(OPENAPI_JSON):
 	curl -fsSL $(OPENAPI_URL) -o $(OPENAPI_JSON)
